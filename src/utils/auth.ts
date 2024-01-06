@@ -11,11 +11,7 @@ export const createJWT = (user: User) => {
   return token;
 };
 
-export const protect = (
-  req: Request & { user?: JwtPayload },
-  res: Response,
-  next: NextFunction
-) => {
+export const protect = (req: Request, res: Response, next: NextFunction) => {
   const bearer = req.headers.authorization;
 
   if (!bearer) {
@@ -43,7 +39,8 @@ export const protect = (
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
-    req.user = payload;
+    // TODO not sure about this
+    req.user = <any>payload;
     next();
   } catch (e) {
     console.error(e);

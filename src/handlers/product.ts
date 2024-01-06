@@ -2,10 +2,16 @@ import { User } from "@prisma/client";
 import prisma from "../utils/db";
 import { Request, Response } from "express";
 
-export type ExtRequest = Request & { user: User };
-
+//export interface ExtRequest extends Request {
+//user: User;
+//}
+declare module "express-serve-static-core" {
+  interface Request {
+    user: User;
+  }
+}
 // Get all products
-export const getProducts = async (req: ExtRequest, res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({
     where: {
       id: req.user.id,
@@ -19,7 +25,7 @@ export const getProducts = async (req: ExtRequest, res: Response) => {
 };
 
 // Get one product
-export const getSingleProduct = async (req: ExtRequest, res: Response) => {
+export const getSingleProduct = async (req: Request, res: Response) => {
   const product = await prisma.product.findFirst({
     where: {
       id: req.params.id,
@@ -30,7 +36,7 @@ export const getSingleProduct = async (req: ExtRequest, res: Response) => {
   res.json({ data: product });
 };
 
-export const createProduct = async (req: ExtRequest, res: Response) => {
+export const createProduct = async (req: Request, res: Response) => {
   const product = await prisma.product.create({
     data: {
       name: req.body.name,
@@ -40,11 +46,13 @@ export const createProduct = async (req: ExtRequest, res: Response) => {
   res.json({ data: product });
 };
 
-export const updateProduct = async (req: ExtRequest, res: Response) => {
+export const updateProduct = async (req: Request, res: Response) => {
   const updated = await prisma.product.update({
     where: {
-      id: req.params.id,
-      belongsToId: req.user.id,
+      id_belongsToId: {
+        id: req.params.id,
+        belongsToId: req.user.id,
+      },
     },
     data: {
       name: req.body.name,
@@ -53,11 +61,13 @@ export const updateProduct = async (req: ExtRequest, res: Response) => {
   res.json({ data: updated });
 };
 
-export const deleteProduct = async (req: ExtRequest, res: Response) => {
+export const deleteProduct = async (req: Request, res: Response) => {
   const deleted = await prisma.product.delete({
     where: {
-      id: req.params.id,
-      belongsToId: req.user.id,
+      id_belongsToId: {
+        id: req.params.id,
+        belongsToId: req.user.id,
+      },
     },
   });
   res.json({ data: deleted });
