@@ -4,13 +4,12 @@ import { Request, Response } from "express";
 
 //export interface ExtRequest extends Request {
 //user: User;
-//}
+//}   "include": ["./**/*.ts"],
 declare module "express-serve-static-core" {
   interface Request {
     user: User;
   }
 }
-// Get all products
 export const getProducts = async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({
     where: {

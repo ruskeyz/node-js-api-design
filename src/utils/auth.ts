@@ -35,12 +35,12 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const payload = jwt.verify(
+    const user = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
     // TODO not sure about this
-    req.user = <any>payload;
+    req.user = <any>user;
     next();
   } catch (e) {
     console.error(e);

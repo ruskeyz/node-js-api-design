@@ -2,7 +2,13 @@ import { Router } from "express";
 import { body } from "express-validator";
 import handleInputErrors from "./utils/handleInputErrors";
 import { validateUpdateProductInput } from "./validators/validators";
-import { getProducts, getSingleProduct } from "./handlers/product";
+import {
+  createProduct,
+  deleteProduct,
+  getProducts,
+  getSingleProduct,
+  updateProduct,
+} from "./handlers/product";
 
 const router = Router();
 
@@ -13,10 +19,15 @@ router.put(
   "/product/:id",
   body("name").isString(),
   handleInputErrors,
-  () => {}
+  updateProduct
 );
-router.post("/product/", body("name").isString(), handleInputErrors, () => {});
-router.delete("/product/:id", () => {});
+router.post(
+  "/product/",
+  body("name").isString(),
+  handleInputErrors,
+  createProduct
+);
+router.delete("/product/:id", deleteProduct);
 
 // Update
 router.get("/update", () => {});
