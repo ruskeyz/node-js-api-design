@@ -1,0 +1,3 @@
+- Check that updateCreate works,
+- Grab that id and getUpdate 
+- Try put and delete (9 - debugging routes)

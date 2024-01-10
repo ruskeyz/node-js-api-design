@@ -9,6 +9,13 @@ import {
   getSingleProduct,
   updateProduct,
 } from "./handlers/product";
+import {
+  createUpdate,
+  deleteUpdate,
+  getSingleUpdate,
+  getUpdates,
+  updateUpdate,
+} from "./handlers/update";
 
 const router = Router();
 
@@ -30,21 +37,22 @@ router.post(
 router.delete("/product/:id", deleteProduct);
 
 // Update
-router.get("/update", () => {});
-router.get("/update/:id", () => {});
+router.get("/update", getUpdates);
+router.get("/update/:id", getSingleUpdate);
 router.put(
   "/update/:id",
   validateUpdateProductInput,
   handleInputErrors,
-  (req, res) => {}
+  updateUpdate
 );
 router.post(
   "/update/",
   body("title").exists().isString(),
   body("body").exists().isString(),
-  () => {}
+  body("productId").exists().isString(),
+  createUpdate
 );
-router.delete("/update/:id", () => {});
+router.delete("/update/:id", deleteUpdate);
 
 // Update Point
 router.get("/updatepoint", () => {});
