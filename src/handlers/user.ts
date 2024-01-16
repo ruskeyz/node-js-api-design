@@ -1,16 +1,31 @@
 import { comparePasswords, createJWT, hashPassword } from "../utils/auth";
 import prisma from "../utils/db";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { ProjectError } from "./errors";
 
-export const createNewUser = async (req: Request, res: Response) => {
-  const user = await prisma.user.create({
-    data: {
-      username: req.body.username,
-      password: await hashPassword(req.body.password),
-    },
-  });
-  const token = createJWT(user);
-  res.json({ token });
+export const createNewUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username: req.body.username,
+        password: await hashPassword(req.body.password),
+      },
+    });
+    const token = createJWT(user);
+    res.json({ token });
+  } catch (error) {
+    next(
+      new ProjectError({
+        type: "AUTH_FAIL_ERROR",
+        message: "Something went wrong during auth, try again",
+        cause: error,
+      })
+    );
+  }
 };
 
 export const signin = async (req: Request, res: Response) => {

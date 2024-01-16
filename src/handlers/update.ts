@@ -34,7 +34,10 @@ export const updateUpdate = async (req: Request, res: Response) => {
   const products = await prisma.product.findMany({
     where: {
       belongsToId: req.user.id,
-      //updates: req.params.id,
+      //updates: {
+      //in: [""],
+      //},
+      //only find product, with id, only updates that match req.params
     },
     include: {
       //TODO this needs to be refactored, use prisma IN method
@@ -47,7 +50,9 @@ export const updateUpdate = async (req: Request, res: Response) => {
   }, []);
 
   const match = updates.find((update) => update.id === req.params.id);
-  if (!match) return res.status(404).json({ message: "Not found update" });
+  if (!match) {
+    return res.json({ message: "Not found update" });
+  }
 
   const updatedUpdate = await prisma.update.update({
     where: {
@@ -55,6 +60,7 @@ export const updateUpdate = async (req: Request, res: Response) => {
     },
     data: req.body,
   });
+
   res.json({ data: updatedUpdate });
 };
 
