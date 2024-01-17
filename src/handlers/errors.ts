@@ -8,6 +8,10 @@ type ErrorName =
   | "PRODUCT_NOT_UPDATED_ERROR"
   | "PRODUCT_NOT_DELETED_ERROR"
   | "SIGN_IN_FAIL_ERROR"
+  | "UPDATE_NOT_FOUND_ERROR"
+  | "UPDATE_NOT_UPDATED_ERROR"
+  | "UPDATE_NOT_CREATED_ERROR"
+  | "UPDATE_NOT_DELETED_ERROR"
   | "AUTH_FAIL_ERROR";
 
 export class ProjectError extends Error {
@@ -50,4 +54,20 @@ export const errorHandler = (
   console.log(`${error.type}: ${error.cause}`);
 
   res.status(500).json({ message: error.message });
+  next(error);
+};
+
+export const catchAllErrors = (
+  error: ProjectError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  process.on("uncaughtException", () => {
+    console.log("uncaughtException", error);
+  });
+  //TODO async catch stuff
+  process.on("unhandledRejection", () => {
+    console.log("unhandledRejection", error);
+  });
 };
