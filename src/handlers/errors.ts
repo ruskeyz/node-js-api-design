@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Request, Response, NextFunction } from "express";
 
 type ErrorName =
@@ -6,6 +7,7 @@ type ErrorName =
   | "PRODUCT_NOT_CREATED_ERROR"
   | "PRODUCT_NOT_UPDATED_ERROR"
   | "PRODUCT_NOT_DELETED_ERROR"
+  | "SIGN_IN_FAIL_ERROR"
   | "AUTH_FAIL_ERROR";
 
 export class ProjectError extends Error {
@@ -37,6 +39,12 @@ export const errorHandler = (
 ) => {
   if (error.type === "PRODUCT_NOT_FOUND_ERROR") {
     console.log("Alert the authorities");
+  }
+  if (error instanceof PrismaClientKnownRequestError) {
+    console.log("ERROR CODE:", error.code);
+    if (error.code === "P2002") {
+      res.status(400).json({ message: "Username must be unique" });
+    }
   }
   console.log("Path: ", req.path);
   console.log(`${error.type}: ${error.cause}`);
