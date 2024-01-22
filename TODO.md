@@ -1,3 +1,5 @@
 - Check that updateCreate works,
 - Grab that id and getUpdate 
 - Try put and delete (9 - debugging routes)
+- https://hendrixer.github.io/API-design-v4/lessons/global-config/configs
+- UI: https://chronos.framer.website/#introducing-timeline
